@@ -74,7 +74,7 @@ module.exports = (sequelize, Sequelize) => {
             }, 
             {
                 unique: true,
-                fields: ['reset_password_token']
+                fields: ['resetPasswordToken']
             },
             {
                 fields: ['provider']

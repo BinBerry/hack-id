@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var db = require("./models");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,6 +37,18 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.listen(() => {
+  console.log(`Express app listening`)
+})
+
+db.sequelize.sync({ force: false }).then(() => {
+  app.listen(function () {
+    console.log("server is successfully running!");
+  });
+}).catch((error) => {
+  console.error('Unable to connect to the database: ', error);
 });
 
 module.exports = app;
