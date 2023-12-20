@@ -1,71 +1,68 @@
-const { DataTypes, Sequelize, Model } = require('sequelize');
-
-
 // sequelize will auto add a createdAt, updatedAt, and auto increment id
-module.exports = (sequelize) => {
+module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define('user', {
         email:{
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             defaultValue: ""
         },
         firstName: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
         },
         lastName: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
         },
         role: {
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 0
         },
         encryptedPassword: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
             defaultValue: ""
         },
         resetPasswordToken:{
-            type: DataTypes.STRING
+            type: Sequelize.STRING
         },
         resetPasswordSentAt: {
             //Sequelize date type is equal to MySQL's datetime type
-            type: DataTypes.DATE
+            type: Sequelize.DATE
         },
         rememberCreatedAt: {
-            type: DataTypes.DATE
+            type: Sequelize.DATE
         },
         signInCount:{
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false
         },
         currentSignInAt: {
-            type: DataTypes.DATE
+            type: Sequelize.DATE
         },
         lastSignInAt: {
-            type: DataTypes.DATE
+            type: Sequelize.DATE
         },
         currentSignInIp: {
-            type: DataTypes.STRING
+            type: Sequelize.STRING
         },
         lastSignInIp: {
-            type: DataTypes.STRING
+            type: Sequelize.STRING
         },
         provider: {
-            type: DataTypes.STRING
+            type: Sequelize.STRING
         },
         uid: {
-            type: DataTypes.STRING
+            type: Sequelize.STRING
         },
         reminderSentAt: {
-            type: DataTypes.DATE
+            type: Sequelize.DATE
         },
         isActive: {
-            type: DataTypes.BOOLEAN,
+            type: Sequelize.BOOLEAN,
             defaultValue: true
         },
         receiveWeeklyReport: {
-            type: DataTypes.BOOLEAN,
+            type: Sequelize.BOOLEAN,
             defaultValue: false
         }
     }, 
