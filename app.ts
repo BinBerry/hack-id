@@ -5,12 +5,14 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 
+// We want to setup the env variables before going into our imports
+dotenv.config();
+
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import db from './models'
 
 const app = express();
-dotenv.config();
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
