@@ -42,12 +42,9 @@ app.use(function(err: any, req: any, res: any, next: any) {
   res.render('error');
 });
 
-app.listen(() => {
-  console.log(`Express app listening`)
-});
-
-db.sequelize.sync({ force: false }).then(() => {
-  app.listen(function () {
+// connects to the database and test to see if credentials are valid
+db.sequelize.authenticate().then(() => {
+  app.listen(() => {
     console.log("server is successfully running!");
   });
 }).catch((error) => {
