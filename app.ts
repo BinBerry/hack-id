@@ -13,6 +13,7 @@ import usersRouter from './routes/users';
 import db from './models'
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
@@ -32,6 +33,9 @@ app.use(function(req: express.Request, res: express.Response, next: express.Next
 });
 
 // error handler
+// There appears to be no nice premade Error type in @types/express for this usage
+// As a temporary measure I am ignoring this warning until we make a error type for this situation
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.use(function(err: any, req: express.Request, res: express.Response) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -42,9 +46,10 @@ app.use(function(err: any, req: express.Request, res: express.Response) {
   res.render('error');
 });
 
-// connects to the database and test to see if credentials are valid
+
+// connects to the database and test to see if credentials are valid if they are we start the server
 db.sequelize.authenticate().then(() => {
-  app.listen(() => {
+  app.listen(PORT, () => {
     console.log("server is successfully running!");
   });
 }).catch((error) => {
