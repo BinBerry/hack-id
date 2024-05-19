@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import * as passportConfig from './config/passport-config';
-import passport from 'passport'
+import {initPassport} from './config/passport-config';
+// import passport from 'passport'
 import session from 'express-session';
 
 // We want to setup the env variables before going into our imports
@@ -20,6 +20,7 @@ import db from './models'
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+console.log("test logging")
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
@@ -35,8 +36,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: true }
 }));
-app.use(passport.initialize())
-app.use(passport.session())
+initPassport(app)
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -61,6 +62,9 @@ app.use(function(err: any, req: express.Request, res: express.Response) {
   res.render('error');
 });
 
+app.on('listening', () => {
+  console.log("this is a listening test")
+})
 
 // connects to the database and test to see if credentials are valid if they are we start the server
 db.sequelize.authenticate().then(() => {
