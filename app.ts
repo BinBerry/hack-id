@@ -15,7 +15,7 @@ dotenv.config();
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import authRouter from './routes/auth';
-import db from './models'
+import db from './config/sequelize-config'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -67,13 +67,13 @@ app.on('listening', () => {
 })
 
 // connects to the database and test to see if credentials are valid if they are we start the server
-db.sequelize.authenticate().then(() => {
+
+db.sequelize.sync().then(()=>{
   app.listen(PORT, () => {
     console.log("server is successfully running!");
   });
 }).catch((error) => {
   console.error('Unable to connect to the database: ', error);
 });
-
 
 module.exports = app;

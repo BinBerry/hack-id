@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import passport from 'passport';
+import passport, { use } from 'passport';
 import { Express, Request, Response, NextFunction } from "express";
 import * as OAuth2Strategy from 'passport-oauth2';
-import * as token from '../models/oauth_tokens';
+import { User } from '../models/User';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-passport.serializeUser((auth: any, done: any) => {
-
+passport.serializeUser((user, done)=> {
+    console.log(user)
+    done(null, user)
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 export function initPassport(app: Express) {
 
     console.log("test init passport")
@@ -19,18 +20,37 @@ export function initPassport(app: Express) {
         authorizationURL: 'https://my.mlh.io/oauth/authorize'!,
         clientID: process.env.mymlh_application_id!,
         clientSecret: process.env.mymlh_secret!,
-        callbackURL: '/auth/mymlh/callback'!
+        callbackURL: '/auth/mymlh/callback'!,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-    }, (access_token: any, done: any) =>{
-        getUserInfo(access_token);
+    }, async (access_token: any, refreshToken: string, profile: any, done: any) =>{
+        const userData = await getUserInfo(access_token)
+        let loginUser = await User.findOne({where: {email: userData.email}})
+        if(loginUser === null){
+            loginUser = await User.create({
+                email: userData.email,
+                firstName: userData.first_name,
+                lastName: userData.last_name,
+            });
+            console.log(loginUser)
+            console.log("New user created for " + userData.email)
+        } else {
+            loginUser.signInCount += 1;
+            loginUser.save();
+            console.log("user already exists updating sign in count");
+        }
+        done(null, loginUser);
     }))
 }
 
 async function getUserInfo(code:string) {
+    console.log(code)
     const response = await fetch(`https://my.mlh.io/api/v3/user.json?access_token=${code}`)
     const json = await response.json();
-    console.log(response.ok);
-    console.log(response.status);
-    console.log(response.text);
-    console.log(json);
+    if(response.ok) {
+        console.log(json.data);
+        return json.data      
+    } else {
+        console.log("Error retrieve User data");
+        console.log(json)
+    }
 }

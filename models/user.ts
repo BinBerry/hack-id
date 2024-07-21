@@ -1,91 +1,79 @@
-import {Sequelize, DataTypes} from 'sequelize'; 
+import {Model, Column, Unique, Default, Table, Index, CreatedAt, UpdatedAt} from 'sequelize-typescript'; 
 
 
-// sequelize will auto add a createdAt, updatedAt, and auto increment id
-module.exports = (sequelize: Sequelize) => {
-    const User = sequelize.define('user', {
-        email:{
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: ""
-        },
-        firstName: {
-            type: DataTypes.STRING,
-        },
-        lastName: {
-            type: DataTypes.STRING,
-        },
-        role: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
-        },
-        encryptedPassword: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: ""
-        },
-        resetPasswordToken:{
-            type: DataTypes.STRING
-        },
-        resetPasswordSentAt: {
-            //Sequelize date type is equal to MySQL's datetime type
-            type: DataTypes.DATE
-        },
-        rememberCreatedAt: {
-            type: DataTypes.DATE
-        },
-        signInCount:{
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        currentSignInAt: {
-            type: DataTypes.DATE
-        },
-        lastSignInAt: {
-            type: DataTypes.DATE
-        },
-        currentSignInIp: {
-            type: DataTypes.STRING
-        },
-        lastSignInIp: {
-            type: DataTypes.STRING
-        },
-        provider: {
-            type: DataTypes.STRING
-        },
-        uid: {
-            type: DataTypes.STRING
-        },
-        reminderSentAt: {
-            type: DataTypes.DATE
-        },
-        isActive: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
-        },
-        receiveWeeklyReport: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        }
-    }, 
-    {
-        indexes: [
-            {
-                unique: true,
-                fields: ['email']
-            }, 
-            {
-                unique: true,
-                fields: ['resetPasswordToken']
-            },
-            {
-                fields: ['provider']
-            },
-            {
-                fields: ['uid']
-            }
-        ]
-    });
-    return User;
+@Table
+export class User extends Model {
+    
+    @Index
+    @Default("")
+    @Unique
+    @Column
+    email!: string;
+
+    @Column
+    firstName?: string;
+
+    @Column
+    lastName?: string;
+
+    @Default(0)
+    @Column
+    role!: number;
+
+    @Default("")
+    @Column
+    encryptedPassword!: string;
+
+    @Unique
+    @Column
+    resetPasswordToken?: string;
+
+    @Column
+    resetPasswordSentAt?: Date;
+
+    @Column
+    rememberCreatedAt?: Date;
+
+    @Default(0)
+    @Column
+    signInCount!: number;
+
+    @Column
+    currentSignInAt?: Date;
+
+    @Column
+    lastSignInAt?: Date;
+
+    @Column
+    currentSignInIp?: string;
+
+    @Column
+    lastSignInIp?: string;
+
+    @Index
+    @Column
+    provider?: string;
+    
+    @Index
+    @Column
+    uid?: string;
+
+    @Column
+    reminderSentAt?: Date;
+
+    @Default(true)
+    @Column
+    isActive?: boolean;
+    
+    @Default(false)
+    @Column
+    receiveWeeklyReport?: boolean;
+
+    @CreatedAt
+    @Column
+    createdAt!: Date;
+
+    @UpdatedAt
+    @Column
+    updatedAt!: Date;
 }

@@ -12,6 +12,7 @@ router.get('/mymlh', passport.authenticate('oauth2', {scope: ['email', 'phone_nu
 
 router.get('/mymlh/callback', passport.authenticate('oauth2'), (req, res) => {
     console.log("test mlh callback")
+    console.log(req)
     res.send('done here')
 })
 
