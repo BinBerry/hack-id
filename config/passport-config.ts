@@ -5,8 +5,19 @@ import * as OAuth2Strategy from 'passport-oauth2';
 import { User } from '../models/User';
 
 passport.serializeUser((user, done)=> {
-    console.log(user)
-    done(null, user)
+    console.log("serializing user");
+    console.log((user as User).id)
+    done(null, (user as User).id)
+})
+
+passport.deserializeUser((id: number, done) => {
+    User.findByPk(id).then((user)=>{
+        console.log("deserialized user: " + user)
+        done(null, user)
+    }).catch((error) =>{
+        console.log("error well deserializing user:" + error)
+    }) 
+  
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
@@ -23,6 +34,8 @@ export function initPassport(app: Express) {
         callbackURL: '/auth/mymlh/callback'!,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     }, async (access_token: any, refreshToken: string, profile: any, done: any) =>{
+        console.log(refreshToken)
+        console.log(profile)
         const userData = await getUserInfo(access_token)
         let loginUser = await User.findOne({where: {email: userData.email}})
         if(loginUser === null){
@@ -36,6 +49,7 @@ export function initPassport(app: Express) {
         } else {
             loginUser.signInCount += 1;
             loginUser.save();
+            console.log(loginUser)
             console.log("user already exists updating sign in count");
         }
         done(null, loginUser);
